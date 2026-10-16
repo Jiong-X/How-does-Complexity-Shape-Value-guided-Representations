@@ -1,0 +1,14 @@
+name: vgc
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.7
+  - numpy>=1.20
+  - pandas
+  - matplotlib
+  - joblib
+  - tqdm
+  - ipywidgets
+  - notebook
+  - ipykernel

@@ -1,0 +1,12 @@
+# python / jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# generated tables (large; regenerate with the notebook)
+results/*.csv
+figures/
+
+# os
+.DS_Store
+Thumbs.db

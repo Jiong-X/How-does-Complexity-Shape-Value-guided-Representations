@@ -1,0 +1,7 @@
+numpy>=1.20
+pandas
+matplotlib
+joblib
+tqdm
+ipywidgets
+notebook
