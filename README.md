@@ -75,9 +75,7 @@ python make_readme_figures.py
 
 Only the first three components explain more variance than shuffled data (permutation p < .001; PC4 p = .71). Together they explain 62% of the variance.
 
-![Scree plot against the permutation null](docs/pca/scree_permutation.png)
-
-The figures below show the five lowest- and five highest-scoring layouts on each component, out of all 124. S, G and paths aren't drawn, because the path measures in the PCA are averages over each layout's 100 S/G variants. Loading plots with bootstrap CIs are in [`docs/pca/`](docs/pca/).
+The figures below show the five lowest- and five highest-scoring mazes on each component, taken from the 24 original mazes (the test set, which wasn't used to fit the PCA). S, G and paths aren't drawn, because the path measures in the PCA are averages over each layout's 100 S/G variants. Loading plots with bootstrap CIs and the permutation scree plot are in [`docs/pca/`](docs/pca/). To pick the examples from the training layouts instead, run `python make_readme_figures.py --set generated`.
 
 ### PC1 (31.6%): spread-out vs clustered obstacles
 
