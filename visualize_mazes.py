@@ -14,7 +14,7 @@ Usage (from the repo root):
   python visualize_mazes.py --individual
   python visualize_mazes.py --ids grid-003-l grid-003-l-SG07
   python visualize_mazes.py --no-path --labels
-  python visualize_mazes.py --files results/mazes_generated.json --overview-only --out figures/pca_training
+  python visualize_mazes.py --files mazes/mazes_generated.json --overview-only --out figures/pca_training
 """
 
 import argparse
@@ -30,10 +30,10 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
 MAZE_FILES = [
-    "data/mazes_Lateralized.json",
-    "data/mazes_Nonlateralized.json",
-    "results/mazes_generated.json",
-    "results/mazes_sg_variants.json",
+    "mazes/mazes_Lateralized.json",
+    "mazes/mazes_Nonlateralized.json",
+    "mazes/mazes_generated.json",
+    "mazes/mazes_sg_variants.json",
 ]
 
 CMAP = ListedColormap(["white", "black", "orange", "royalblue"])
@@ -103,14 +103,15 @@ def shortest_path(maze):
 # drawing
 # ---------------------------------------------------------------------------
 
-def draw_maze(ax, maze, title=None, show_path=True, labels=False, title_size=9):
+def draw_maze(ax, maze, title=None, show_path=True, labels=False, title_size=9, show_sg=True):
     grid = np.array([list(row) for row in maze])
     H, W = grid.shape
 
     codes = np.zeros((H, W))
     codes[grid == "#"] = 1
     codes[np.vectorize(str.isdigit)(grid)] = 2
-    codes[(grid == "S") | (grid == "G")] = 3
+    if show_sg:
+        codes[(grid == "S") | (grid == "G")] = 3
     ax.imshow(codes, cmap=CMAP, interpolation="nearest", vmin=0, vmax=3)
 
     # thin cell borders (drawn as lines - much faster than tick-based gridlines)
@@ -119,7 +120,7 @@ def draw_maze(ax, maze, title=None, show_path=True, labels=False, title_size=9):
     ax.vlines(np.arange(-.5, W), -.5, H - .5, color="lightgray", linewidth=0.4)
     ax.hlines(np.arange(-.5, H), -.5, W - .5, color="lightgray", linewidth=0.4)
 
-    for ch in ("S", "G"):
+    for ch in (("S", "G") if show_sg else ()):
         rc = np.argwhere(grid == ch)
         if len(rc):
             ax.text(rc[0][1], rc[0][0], ch, ha="center", va="center",

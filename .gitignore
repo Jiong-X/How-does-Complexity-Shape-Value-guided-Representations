@@ -4,9 +4,15 @@ __pycache__/
 .ipynb_checkpoints/
 
 # generated tables (large; regenerate with the notebook)
-results/*.csv
+metrics/*.csv
+!metrics/structure_metrics.csv
 figures/
 
 # os
 .DS_Store
 Thumbs.db
+
+# R session files
+.RData
+.Rhistory
+.Rproj.user/
