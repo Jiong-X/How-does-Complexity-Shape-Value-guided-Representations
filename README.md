@@ -77,19 +77,19 @@ Only the first three components explain more variance than shuffled data (permut
 
 The figures below show the five lowest- and five highest-scoring mazes on each component, taken from the 24 original mazes (the test set, which wasn't used to fit the PCA). S, G and paths aren't drawn, because the path measures in the PCA are averages over each layout's 100 S/G variants. Loading plots with bootstrap CIs and the permutation scree plot are in [`docs/pca/`](docs/pca/). To pick the examples from the training layouts instead, run `python make_readme_figures.py --set generated`.
 
-### PC1 (31.6%): spread-out vs clustered obstacles
+### PC1 (31.6%): spread-out vs clustered obstacles (Global Visual Complexity)
 
 High PC1 means obstacles packed close together and around the central wall: higher local entropy and edge density, and shorter, more even distances between obstacles. Optimal paths have longer straight runs and fewer turns. Low PC1 means obstacles pushed out to the edges and corners, at uneven distances from each other.
 
-![PC1 extremes](docs/pc1_extremes.png)
+![PC1 extremes](docs/pc1_extremes.png) 
 
-### PC2 (17.7%): path and planning demands
+### PC2 (17.7%): path and planning demands (Planning Complexity)
 
 High PC2 means longer optimal paths with more turns, and larger optimal construals (more obstacles worth representing). The obstacle-layout measures barely load on this component.
 
 ![PC2 extremes](docs/pc2_extremes.png)
 
-### PC3 (13.1%): obstacle shape diversity
+### PC3 (13.1%): obstacle shape diversity (Local Visual Complexity)
 
 High PC3 means more distinct obstacle shapes, rougher outlines and lower shape similarity between obstacles. Low PC3 means obstacles of similar, compact shapes.
 
