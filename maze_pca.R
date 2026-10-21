@@ -47,6 +47,7 @@ features <- c(
   var_nn_dist                 = "Variance in Nearest-Neighbor Distance",
   mean_optimal_path_length    = "Mean Optimal Path Length",
   mean_n_turns                = "Mean Number of Turns",
+  mean_n_straight             = "Mean Length of Straight Paths",
   mean_turn_to_path_ratio     = "Mean Turn to Path Ratio",
   mean_optimal_construal_size = "Mean Optimal Construal Size"
 )
