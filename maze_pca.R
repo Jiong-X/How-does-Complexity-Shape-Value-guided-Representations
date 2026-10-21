@@ -47,11 +47,9 @@ features <- c(
   var_nn_dist                 = "Variance in Nearest-Neighbor Distance",
   mean_optimal_path_length    = "Mean Optimal Path Length",
   mean_n_turns                = "Mean Number of Turns",
-  mean_n_straight             = "Mean Length of Straight Paths",
   mean_turn_to_path_ratio     = "Mean Turn to Path Ratio",
   mean_optimal_construal_size = "Mean Optimal Construal Size"
 )
-# n_obstacles (always 6) and mean_lateralization_score are left out
 
 # the 24 original mazes are grid-000 ... grid-011 (-l and -n); everything else
 # was generated and is used to fit the PCA

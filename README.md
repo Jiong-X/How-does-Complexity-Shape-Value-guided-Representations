@@ -8,7 +8,7 @@ Code for generating the maze set, computing the complexity measures for each maz
 2. creates 100 start/goal (S/G) variants of each layout
 3. computes layout measures once per base layout: symmetry, obstacle spacing, obstacle shape, edge density and local entropy
 4. computes optimal path measures for every S/G variant
-5. runs value-guided construal (VGC) on every solvable maze and computes a lateralization score from the optimal construal
+5. runs value-guided construal (VGC) on every solvable maze and records the optimal construal
 6. summarises everything at the layout level
 
 `maze_pca.R` then runs a PCA on the layout-level measures (see [Complexity dimensions](#complexity-dimensions)).
@@ -18,6 +18,7 @@ Code for generating the maze set, computing the complexity measures for each maz
 ```
 .
 ├── Complexity_Measures.ipynb
+├── maze_utils.py           # shared helpers (grid parsing, optimal path)
 ├── maze_pca.R              # PCA, permutation test, bootstrapped loadings, PC scores
 ├── visualize_mazes.py      # draws the mazes
 ├── make_readme_figures.py  # the PC figures below
@@ -62,7 +63,7 @@ The VGC step (section 6) is by far the slowest part. It runs in parallel and lea
 
 ## Complexity dimensions
 
-`maze_pca.R` fits a PCA on 16 layout-level measures of the 100 generated layouts (standardised; `n_obstacles` is constant and left out). The 24 original mazes aren't used for fitting; they're projected onto the same components. Then the script:
+`maze_pca.R` fits a PCA on 15 standardised layout-level measures of the 100 generated layouts. The 24 original mazes aren't used for fitting; they're projected onto the same components. Then the script:
 
 - runs a permutation test (each column shuffled 1,000 times) to decide how many components to keep
 - bootstraps the loadings (1,000 resamples) to get 95% CIs
@@ -73,23 +74,23 @@ Rscript maze_pca.R            # needs the ggplot2 and boot packages
 python make_readme_figures.py
 ```
 
-Only the first three components explain more variance than shuffled data (permutation p < .001; PC4 p = .71). Together they explain 62% of the variance.
+Only the first three components explain more variance than shuffled data (permutation p < .001; PC4 p = 1.00). Together they explain 63% of the variance.
 
 The figures below show the five lowest- and five highest-scoring mazes on each component, taken from the 24 original mazes (the test set, which wasn't used to fit the PCA). S, G and paths aren't drawn, because the path measures in the PCA are averages over each layout's 100 S/G variants. Loading plots with bootstrap CIs and the permutation scree plot are in [`docs/pca/`](docs/pca/). To pick the examples from the training layouts instead, run `python make_readme_figures.py --set generated`.
 
-### PC1 (31.6%): spread-out vs clustered obstacles (Global Visual Complexity)
+### PC1 (31.8%): spread-out vs clustered obstacles (Global Visual Complexity)
 
-High PC1 means obstacles packed close together and around the central wall: higher local entropy and edge density, and shorter, more even distances between obstacles. Optimal paths have longer straight runs and fewer turns. Low PC1 means obstacles pushed out to the edges and corners, at uneven distances from each other.
+High PC1 means obstacles packed close together and around the central wall: higher local entropy and edge density, and shorter, more even distances between obstacles. Optimal paths have fewer turns per step. Low PC1 means obstacles pushed out to the edges and corners, at uneven distances from each other.
 
 ![PC1 extremes](docs/pc1_extremes.png) 
 
-### PC2 (17.7%): path and planning demands (Planning Complexity)
+### PC2 (17.1%): path and planning demands (Planning Complexity)
 
 High PC2 means longer optimal paths with more turns, and larger optimal construals (more obstacles worth representing). The obstacle-layout measures barely load on this component.
 
 ![PC2 extremes](docs/pc2_extremes.png)
 
-### PC3 (13.1%): obstacle shape diversity (Local Visual Complexity)
+### PC3 (13.9%): obstacle shape diversity (Local Visual Complexity)
 
 High PC3 means more distinct obstacle shapes, rougher outlines and lower shape similarity between obstacles. Low PC3 means obstacles of similar, compact shapes.
 
@@ -117,7 +118,7 @@ Figures go to `figures/`, which is git-ignored. Walls are black, obstacles orang
 | `mazes/mazes_generated.json` | new base maze | the 100 generated layouts (`grid-012-l` … `grid-111-l`) |
 | `mazes/mazes_sg_variants.json` | S/G variant | every `<base_id>-SGxx` maze |
 | `metrics/maze_complexity_metrics.csv` | maze (base + S/G variants) | layout and optimal path measures |
-| `metrics/maze_with_path_complexity_metrics.csv` | solvable maze | the above plus the optimal construal, construal size, L/R counts and lateralization score |
+| `metrics/maze_with_path_complexity_metrics.csv` | solvable maze | the above plus the optimal construal, its size and the value of each construal |
 | `metrics/structure_metrics.csv` | base layout | layout measures, plus path and VGC measures averaged over the S/G variants |
 
 The large per-maze CSVs in `metrics/` are git-ignored. The maze JSONs, `structure_metrics.csv` and the PCA outputs are small and committed, so the README figures can be rebuilt without re-running the notebook.

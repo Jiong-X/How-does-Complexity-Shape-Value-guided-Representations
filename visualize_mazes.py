@@ -18,7 +18,6 @@ Usage (from the repo root):
 """
 
 import argparse
-import heapq
 import json
 import math
 import os
@@ -29,6 +28,8 @@ matplotlib.use("Agg")  # no window, just files
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
+from maze_utils import shortest_path
+
 MAZE_FILES = [
     "mazes/mazes_Lateralized.json",
     "mazes/mazes_Nonlateralized.json",
@@ -37,7 +38,6 @@ MAZE_FILES = [
 ]
 
 CMAP = ListedColormap(["white", "black", "orange", "royalblue"])
-DIRS4 = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
 
 def load_mazes(files):
@@ -53,50 +53,6 @@ def load_mazes(files):
 
 def base_id_of(maze_id):
     return maze_id.split("-SG")[0]
-
-
-# ---------------------------------------------------------------------------
-# optimal path (same A* as the notebook: shortest, then fewest turns)
-# ---------------------------------------------------------------------------
-
-def shortest_path(maze):
-    grid = np.array([list(row) for row in maze])
-    H, W = grid.shape
-    if not (grid == "S").any() or not (grid == "G").any():
-        return None
-    start = tuple(np.argwhere(grid == "S")[0])
-    goal = tuple(np.argwhere(grid == "G")[0])
-
-    def h(r, c):
-        return abs(r - goal[0]) + abs(c - goal[1])
-
-    INF = (float("inf"), float("inf"))
-    pq = [(h(*start), 0, 0, 0, start[0], start[1], None)]
-    best = {(start[0], start[1], None): (0, 0)}
-    parent = {}
-
-    while pq:
-        _, _, g_steps, g_turns, r, c, prev_dir = heapq.heappop(pq)
-        state = (r, c, prev_dir)
-        if best.get(state, INF) < (g_steps, g_turns):
-            continue
-        if (r, c) == goal:
-            path = [(r, c)]
-            while state in parent:
-                state = parent[state]
-                path.append((state[0], state[1]))
-            return path[::-1]
-        for d in DIRS4:
-            nr, nc = r + d[0], c + d[1]
-            if not (0 <= nr < H and 0 <= nc < W) or grid[nr, nc] not in (".", "S", "G"):
-                continue
-            new_g = (g_steps + 1, g_turns + (0 if prev_dir is None or d == prev_dir else 1))
-            nxt = (nr, nc, d)
-            if new_g < best.get(nxt, INF):
-                best[nxt] = new_g
-                parent[nxt] = state
-                heapq.heappush(pq, (new_g[0] + h(nr, nc), new_g[1], new_g[0], new_g[1], nr, nc, d))
-    return None
 
 
 # ---------------------------------------------------------------------------
